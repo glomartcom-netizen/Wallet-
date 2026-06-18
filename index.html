@@ -447,17 +447,19 @@ style="flex:1;text-align:center;padding:8px 14px;border-radius:20px;background:t
 <div id="refBox" class="hidden glass-card p-5 border border-amber-500/40 shadow-lg">
 
 <p class="text-sm text-gray-400 font-bold uppercase mb-2 flex items-center gap-2">
-<i class="fa-solid fa-link text-amber-400"></i>    
-My Referral Link    
+<i class="fa-solid fa-link text-amber-400"></i>
+My Referral Link
 </p>
 
 <div class="flex gap-2">
 
-<input type="text" id="myRefLink" readonly class="input-dark text-sm bg-black/40">
+<input type="text"
+id="myRefLink"
+readonly
+class="input-dark text-sm bg-black/40">
 
-<input type="hidden" id="refAddress" value="0x0000000000000000000000000000000000000000">
-
-<button onclick="copyRef()" class="bg-amber-500 text-black px-5 rounded-xl text-sm font-bold uppercase">
+<button onclick="copyRef()"
+class="bg-amber-500 text-black px-5 rounded-xl text-sm font-bold uppercase">
 Copy
 </button>
 
@@ -468,59 +470,76 @@ Copy
 </p>
 
 </div>
-    
-    
+
+
 <!-- ============================== -->
 <!-- 🔥 STAKING (FINAL CLEAN) -->
 <!-- ============================== -->
-<div class="glass-card p-5 border border-amber-500/20">  
-  
-<h3 class="text-sm text-amber-400 font-black uppercase mb-4 flex items-center gap-2">  
-<i class="fa-solid fa-layer-group"></i> Live Staking  
-</h3>  
-  
-<input type="number" id="stakeAmount"  
-placeholder="Enter Amount (Min 2500 DMX)"  
-class="input-dark w-full text-center mb-3">  
-  
-<p id="usdtEstimate" class="text-xs text-green-400 text-center mb-3"></p>  
-  
-<p class="text-[11px] text-gray-400 text-center">  
-USDT (<span class="text-emerald-400 font-bold">BEP20</span>)  
-</p>  
-  
+<div class="glass-card p-5 border border-amber-500/20">
+
+<h3 class="text-sm text-amber-400 font-black uppercase mb-4 flex items-center gap-2">
+<i class="fa-solid fa-layer-group"></i>
+Live Staking
+</h3>
+
+<input type="number"
+id="stakeAmount"
+placeholder="Enter Amount (Min 2500 DMX)"
+class="input-dark w-full text-center mb-3">
+
+<p id="usdtEstimate"
+class="text-xs text-green-400 text-center mb-3"></p>
+
+<p class="text-[11px] text-gray-400 text-center">
+USDT (<span class="text-emerald-400 font-bold">BEP20</span>)
+</p>
+
+<!-- 🔥 SPONSOR ADDRESS -->
+<div class="mt-3">
+
+<input
+type="text"
+id="refAddress"
+placeholder="Sponsor Address (Optional)"
+class="input-dark text-center text-[11px]">
+
+<p class="text-[10px] text-gray-500 text-center mt-1">
+Optional
+</p>
+
+</div>
+
 <!-- PLAN -->
-<div class="grid grid-cols-3 gap-2 mt-2">  
-  
-<button onclick="selectPlan(this,1)"   
-class="plan-btn p-3 rounded-xl bg-white/5 text-center">  
-<div>90 Days</div>  
-<div>0.20% Daily</div>  
-</button>  
-  
-<button onclick="selectPlan(this,2)"   
-class="plan-btn p-3 rounded-xl bg-white/5 text-center">  
-<div>180 Days</div>  
-<div>0.25% Daily</div>  
-</button>  
-  
-<button onclick="selectPlan(this,3)"   
-class="plan-btn p-3 rounded-xl bg-white/5 text-center">  
-<div>365 Days</div>  
-<div>0.30% Daily</div>  
-</button>  
-  
-</div>  
-  
-<button onclick="openStakeBox()"  
-class="w-full mt-4 py-3 rounded-xl text-white font-bold   
-bg-gradient-to-r from-pink-500 to-rose-500">  
-  
-🚀 Stake Now  
-  
-</button>  
-  
-</div>  
+<div class="grid grid-cols-3 gap-2 mt-3">
+
+<button onclick="selectPlan(this,1)"
+class="plan-btn p-3 rounded-xl bg-white/5 text-center">
+<div>90 Days</div>
+<div>0.20% Daily</div>
+</button>
+
+<button onclick="selectPlan(this,2)"
+class="plan-btn p-3 rounded-xl bg-white/5 text-center">
+<div>180 Days</div>
+<div>0.25% Daily</div>
+</button>
+
+<button onclick="selectPlan(this,3)"
+class="plan-btn p-3 rounded-xl bg-white/5 text-center">
+<div>365 Days</div>
+<div>0.30% Daily</div>
+</button>
+
+</div>
+
+<button onclick="openStakeBox()"
+class="w-full mt-4 py-3 rounded-xl text-white font-bold bg-gradient-to-r from-pink-500 to-rose-500">
+
+🚀 Stake Now
+
+</button>
+
+</div>
 
 <!-- ============================== -->
 <!-- 🔥 STAKE MODAL -->
