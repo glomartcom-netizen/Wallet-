@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>DimeX Pro</title>
+</head>
+<body>
+
+  <!-- AppKit built-in connect button -->
+  <appkit-button></appkit-button>
+
+  <script type="module">
+    import { createAppKit } from 'https://esm.sh/@reown/appkit@1.7.0?bundle'
+    import { Ethers5Adapter } from 'https://esm.sh/@reown/appkit-adapter-ethers5@1.7.0?bundle'
+    import { bsc } from 'https://esm.sh/@reown/appkit@1.7.0/networks?bundle'
+
+    const projectId = '1885ad435015158bf203263156175c91';
+
+    const metadata = {
+      name: 'DimeX Pro',
+      description: 'DimeX Dashboard',
+      url: 'https://dimex.world', // must exactly match your domain
+      icons: ['https://i.ibb.co/HpqwGFqt/logo.png']
+    };
+
+    const modal = createAppKit({
+      adapters: [new Ethers5Adapter()],
+      networks: [bsc],
+      defaultNetwork: bsc,
+      metadata,
+      projectId,
+      features: {
+        analytics: false,
+        email: false,
+        socials: false,
+        swaps: false
+      }
+    });
+
+    window.appKitModal = modal;
+
+    let synced = false;
+
+    modal.subscribeState(async (state) => {
+      if (state?.isConnected && !synced) {
+        synced = true;
+        try {
+          if (window.syncWallet) await window.syncWallet();
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      if (!state?.isConnected) {
+        synced = false;
+      }
+    });
+
+    window.addEventListener('load', () => {
+      let retry = 0;
+      const reconnect = setInterval(async () => {
+        try {
+          const provider = modal.getWalletProvider();
+          if (provider) {
+            if (window.syncWallet) await window.syncWallet();
+            clearInterval(reconnect);
+          }
+          retry++;
+          if (retry >= 10) clearInterval(reconnect);
+        } catch (e) {
+          clearInterval(reconnect);
+        }
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>
