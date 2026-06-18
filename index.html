@@ -493,8 +493,25 @@ class="text-xs text-green-400 text-center mb-3"></p>
 USDT (<span class="text-emerald-400 font-bold">BEP20</span>)
 </p>
 
+<!-- Sponsor Display -->
+<div id="sponsorDisplay"
+class="mt-3 text-center text-xs text-cyan-300">
+<!-- JS auto display -->
+</div>
+
+<!-- Sponsor Input -->
+<div class="mt-2">
+
+<input
+type="text"
+id="refAddress"
+placeholder="Paste Referral Link (Optional)"
+class="input-dark w-full text-center text-xs bg-black/30 border border-cyan-500/20 rounded-xl">
+
+</div>
+
 <!-- PLAN -->
-<div class="grid grid-cols-3 gap-2 mt-2">
+<div class="grid grid-cols-3 gap-2 mt-3">
 
 <button onclick="selectPlan(this,1)"
 class="plan-btn p-3 rounded-xl bg-white/5 text-center">
@@ -514,19 +531,6 @@ class="plan-btn p-3 rounded-xl bg-white/5 text-center">
 <div>0.30% Daily</div>
 </button>
 
-</div>
-
-<!-- Sponsor Display -->
-<div id="sponsorDisplay"
-class="mt-3 text-center"></div>
-
-<!-- Manual Sponsor Input -->
-<div class="mt-2">
-<input
-type="text"
-id="refAddress"
-placeholder="Referral Link / Sponsor ID (Optional)"
-class="input-dark w-full text-center text-xs bg-black/30 border border-cyan-500/20 rounded-xl">
 </div>
 
 <button onclick="openStakeBox()"
