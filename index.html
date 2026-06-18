@@ -261,7 +261,7 @@ DimeX
 <div class="relative">
 
 <button id="walletBtn"      
-onclick="window.appKitModal.open()"      
+onclick="connectWallet()"      
 class="bg-amber-500 text-black 
 px-3 sm:px-4 
 py-1.5 sm:py-2 
@@ -981,59 +981,6 @@ View
   
 </main>      
         
-<script type="module">
-  import { createAppKit } from 'https://esm.sh/@reown/appkit?bundle'
-  import { EthersAdapter } from 'https://esm.sh/@reown/appkit-adapter-ethers?bundle'
-  import { bsc } from 'https://esm.sh/@reown/appkit/networks?bundle'
-
-  const projectId = '1885ad435015158bf203263156175c91';
-
-  const modal = createAppKit({
-    adapters: [new EthersAdapter()],
-    networks: [bsc],
-    defaultNetwork: bsc,
-    projectId,
-    metadata: {
-      name: 'DimeX Pro',
-      description: 'DimeX Pro',
-      url: 'https://dimex.world',
-      icons: ['https://i.ibb.co/HpqwGFqt/logo.png']
-    },
-    features: { analytics: true },
-    enableWalletConnect: true,
-    enableInjected: true,
-    enableEIP6963: true
-  });
-
-  window.appKitModal = modal;
-
-  /* SUBSCRIBE STATE */
-  modal.subscribeState((state) => {
-    if(state?.isConnected && window.syncWallet){
-      window.syncWallet();
-    }
-  });
-
-  /* AUTO RECONNECT */
-  window.addEventListener("load", () => {
-    let retry = 0;
-    const maxRetries = 10;
-
-    const reconnect = setInterval(() => {
-      const provider = modal.getWalletProvider();
-
-      if(provider){
-        if(window.syncWallet) window.syncWallet();
-        clearInterval(reconnect);
-      }
-
-      retry++;
-      if(retry >= maxRetries) clearInterval(reconnect);
-
-    }, 1000);
-  });
-</script>
-
 <script>  
     
 const API = "https://www.dimex.world";
@@ -1126,129 +1073,200 @@ async function txWrap(txPromise){
     }
 }
     
-  
+
 let provider, signer, contract, userAddress;
-          
-    // 1️⃣ Referral Auto-fill on load          
-    window.addEventListener("load", () => {
 
-    const urlParams = new URLSearchParams(window.location.search);    
-    const ref = urlParams.get('ref');          
+window.addEventListener("load", () => {
 
-    const defaultRef = "0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";  
+const urlParams = new URLSearchParams(window.location.search);
+const ref = urlParams.get('ref');
 
-    const finalRef = (ref && ethers.utils.isAddress(ref)) ? ref : defaultRef;
+const defaultRef = "0x53ba2d865be750d0e2d4d01bcb0a46ec1684c46b";
 
-    document.getElementById("refAddress").value = finalRef;
+const finalRef =
+(ref && ethers.utils.isAddress(ref))
+? ref
+: defaultRef;
 
-    // 🔗 short format
-    const short = finalRef.slice(0,6) + "..." + finalRef.slice(-4);
+document.getElementById("refAddress").value = finalRef;
 
-    // 👉 HERE (one line display)
-    document.getElementById("myRefLink").title = "Ref: " + short;
+const short =
+finalRef.slice(0,6) +
+"..." +
+finalRef.slice(-4);
+
+document.getElementById("myRefLink").title =
+"Ref: " + short;
 
 });
-          
-  // ==========================
-// 🔥 WALLET SYNC (FINAL FIX)
-// ==========================
 
 let isConnecting = false;
 
-window.syncWallet = async function() {          
+async function connectWallet(){
 
-    if (isConnecting) return; // 🔥 loop prevent
-    isConnecting = true;
+if(isConnecting) return;
 
-    try {
+isConnecting = true;
 
-        if (!window.appKitModal) {
-            isConnecting = false;
-            return;
-        }
+try{
 
-        const walletProvider = window.appKitModal.getWalletProvider();          
+if(!window.ethereum){
 
-        if (walletProvider) {          
-            provider = new ethers.providers.Web3Provider(walletProvider);          
+alert("Please open inside Wallet Browser");
 
-            // ✅ NETWORK CHECK (AUTO FIX)
-            const network = await provider.getNetwork();          
+isConnecting = false;
 
-            if (network.chainId !== 56) {
-                try {
-                    await walletProvider.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: "0x38" }]
-                    });
+return;
 
-                    isConnecting = false;
-                    return; // 🔥 wait next cycle
+}
 
-                } catch {
-                    isConnecting = false;
-                    return;
-                }
-            }
+provider = new ethers.providers.Web3Provider(window.ethereum);
 
-            // ✅ WALLET CONNECT
-            signer = provider.getSigner();          
-            userAddress = await signer.getAddress();          
+await provider.send("eth_requestAccounts",[]);
 
-            // ✅ BUTTON UPDATE
-            const btn = document.getElementById("walletBtn");          
-            const short = userAddress.slice(0,6) + "..." + userAddress.slice(-4);          
+const network = await provider.getNetwork();
 
-            const balanceWei = await provider.getBalance(userAddress);          
-            const balance = ethers.utils.formatEther(balanceWei);          
+if(network.chainId !== 56){
 
-            btn.innerText = short + " | " + parseFloat(balance).toFixed(3) + " BNB";          
+try{
 
-            btn.classList.remove("bg-amber-500","text-black");          
-            btn.classList.add("bg-emerald-600","text-white","walletConnected");          
+await window.ethereum.request({
 
-            // ✅ CONTRACT INIT
-            contract = new ethers.Contract(STAKE_ADDR, ABI, signer);          
+method:"wallet_switchEthereumChain",
 
-            // ✅ REF LINK
-            document.getElementById('refBox').classList.remove('hidden');          
-            document.getElementById('myRefLink').value =
-                window.location.origin + window.location.pathname + "?ref=" + userAddress;          
+params:[{
 
-            // ✅ LOAD DATA
-            await refreshData();          
-            showTab('stakes');          
-        }
+chainId:"0x38"
 
-    } catch(e){
-        console.log("Wallet sync error");
-    }
+}]
 
-    isConnecting = false;
-};
+});
 
+}catch(e){
 
-// ==========================
-// 🔄 AUTO REFRESH (FINAL)
-// ==========================
+alert("Please switch to BNB Smart Chain");
 
-setInterval(async () => {
+isConnecting = false;
+
+return;
+
+}
+
+}
+
+signer = provider.getSigner();
+
+userAddress = await signer.getAddress();
+
+contract = new ethers.Contract(
+
+STAKE_ADDR,
+
+ABI,
+
+signer
+
+);
+
+const btn = document.getElementById("walletBtn");
+
+const short =
+
+userAddress.slice(0,6)
+
++
+
+"..."
+
++
+
+userAddress.slice(-4);
+
+const balanceWei =
+await provider.getBalance(userAddress);
+
+const balance =
+ethers.utils.formatEther(balanceWei);
+
+btn.innerText =
+
+short +
+
+" | " +
+
+parseFloat(balance).toFixed(3)
+
++
+
+" BNB";
+
+btn.classList.remove(
+
+"bg-amber-500",
+
+"text-black"
+
+);
+
+btn.classList.add(
+
+"bg-emerald-600",
+
+"text-white",
+
+"walletConnected"
+
+);
+
+document.getElementById("refBox")
+.classList.remove("hidden");
+
+document.getElementById("myRefLink").value =
+
+window.location.origin +
+
+window.location.pathname +
+
+"?ref=" +
+
+userAddress;
+
+await refreshData();
+
+showTab("stakes");
+
+}catch(e){
+
+console.log("Wallet connect error",e);
+
+}
+
+isConnecting = false;
+
+}
+
+setInterval(async()=>{
 
 try{
 
 if(!userAddress){
-await window.syncWallet();
+
 return;
+
 }
 
 await refreshData();
+
 await updatePrice();
 
 }catch(e){
+
 console.log("Dashboard sync error");
+
 }
 
 },10000);
+
           
 async function refreshData() {
     if (!contract || !userAddress) return;
@@ -3920,32 +3938,43 @@ alert(
 
 
 // ==============================
-// 🔹 WALLET BUTTON (CLEAN)
+// 🔹 WALLET BUTTON
 // ==============================
 window.addEventListener("load", () => {
 
     const btn = document.getElementById("walletBtn");
 
-    if(btn && window.appKitModal){
-        btn.onclick = () => window.appKitModal.open();
+    if(btn){
+
+        btn.onclick = async () => {
+
+            if(window.ethereum){
+
+                try{
+
+                    await window.ethereum.request({
+                        method: "eth_requestAccounts"
+                    });
+
+                    await syncWallet();
+
+                }catch(err){
+
+                    console.log(err);
+
+                }
+
+            }else{
+
+                alert("Please open this page inside MetaMask, Trust Wallet, SafePal or other wallet browser.");
+
+            }
+
+        };
+
     }
 
 });
-
-// 🔥 CLICK OUTSIDE CLOSE
-document.addEventListener("click", function(e){
-
-    const btn = document.getElementById("walletBtn");
-    const menu = document.getElementById("walletMenu");
-
-    if(!btn || !menu) return;
-
-    if(!btn.contains(e.target) && !menu.contains(e.target)){
-        menu.classList.add("hidden");
-    }
-
-});
-
 
 // ==============================
 // 🔓 WALLET OPEN (CLEAN FINAL)
