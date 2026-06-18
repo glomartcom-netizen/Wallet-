@@ -3938,45 +3938,6 @@ alert(
 
 
 // ==============================
-// 🔹 WALLET BUTTON
-// ==============================
-window.addEventListener("load", () => {
-
-    const btn = document.getElementById("walletBtn");
-
-    if(btn){
-
-        btn.onclick = async () => {
-
-            if(window.ethereum){
-
-                try{
-
-                    await window.ethereum.request({
-                        method: "eth_requestAccounts"
-                    });
-
-                    await syncWallet();
-
-                }catch(err){
-
-                    console.log(err);
-
-                }
-
-            }else{
-
-                alert("Please open this page inside MetaMask, Trust Wallet, SafePal or other wallet browser.");
-
-            }
-
-        };
-
-    }
-
-});
-
-// ==============================
 // 🔓 WALLET OPEN (CLEAN FINAL)
 // ==============================
 
