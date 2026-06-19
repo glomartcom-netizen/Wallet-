@@ -3816,102 +3816,10 @@ if(window.ethereum){
     }
 }
 
-// =========================
-// 🟡 TRUST WALLET
-// =========================
-if(
-    window.ethereum?.isTrust ||
-    ua.includes("trustwallet") ||
-    ua.includes("trust")
-){
 
-    window.location.href =
-    "https://link.trustwallet.com/add_asset?asset=c56_" + address;
-
-    return;
-}
 
 // =========================
-// 🟢 SAFEPAL
-// =========================
-if(
-    ua.includes("safepal") ||
-    ua.includes("sfwallet")
-){
-
-    window.location.href =
-    "https://www.safepal.com/download";
-
-    return;
-}
-
-// =========================
-// ⚫ OKX WALLET
-// =========================
-if(ua.includes("okx")){
-
-    window.location.href =
-    "okx://wallet/dapp/url?dappUrl=" +
-    encodeURIComponent(window.location.href);
-
-    return;
-}
-
-// =========================
-// 🟢 BITGET / BITKEEP
-// =========================
-if(
-    ua.includes("bitkeep") ||
-    ua.includes("bitget")
-){
-
-    window.location.href =
-    "bitkeep://bkconnect?action=dapp&url=" +
-    encodeURIComponent(window.location.href);
-
-    return;
-}
-
-// =========================
-// 🟠 TOKENPOCKET
-// =========================
-if(ua.includes("tokenpocket")){
-
-    window.location.href =
-    "tpdapp://open?url=" +
-    encodeURIComponent(window.location.href);
-
-    return;
-}
-
-// =========================
-// 🌈 RAINBOW
-// =========================
-if(ua.includes("rainbow")){
-
-    window.location.href =
-    "rainbow://open_url?url=" +
-    encodeURIComponent(window.location.href);
-
-    return;
-}
-
-// =========================
-// 🔵 COINBASE
-// =========================
-if(ua.includes("coinbase")){
-
-    window.open(
-        "https://go.cb-w.com/dapp?cb_url=" +
-        encodeURIComponent(window.location.href),
-        "_blank"
-    );
-
-    return;
-}
-
-// =========================
-// 🦊 METAMASK + EVM
+// 🌐 UNIVERSAL ADD TOKEN
 // =========================
 if(window.ethereum){
 
@@ -3920,25 +3828,27 @@ if(window.ethereum){
         const wasAdded =
         await window.ethereum.request({
 
-            method: 'wallet_watchAsset',
+            method:'wallet_watchAsset',
 
-            params: {
-                type: 'ERC20',
-                options: {
+            params:{
+                type:'ERC20',
+                options:{
                     address,
                     symbol,
                     decimals,
                     image
                 }
             }
+
         });
 
         if(wasAdded){
 
             showToast(
-                "✅ DMX Added to BNB Chain",
+                "✅ DMX Added to Wallet",
                 "#16a34a"
             );
+
         }
 
         return;
@@ -3946,7 +3856,9 @@ if(window.ethereum){
     }catch(e){
 
         console.log(e);
+
     }
+
 }
 
 
@@ -3957,12 +3869,13 @@ navigator.clipboard.writeText(address);
 
 alert(
 "📌 DMX Token Address Copied\n\n" +
-"Wallet auto-detect failed.\n\n" +
-"👉 Steps:\n" +
-"1. Open your Wallet\n" +
-"2. Add Custom Token\n" +
-"3. Paste DMX Address\n\n" +
-"Done 👍"
+"Wallet auto-add not supported.\n\n" +
+"👉 Open Wallet\n" +
+"👉 Add Custom Token\n" +
+"👉 Paste DMX Address\n\n" +
+"Network : BNB Smart Chain\n" +
+"Symbol : DMX\n" +
+"Decimals : 18"
 );
 
 }
@@ -4096,9 +4009,129 @@ function hideWalletPanel(){
 
 </script>
 
+<!-- ==============================
+🔗 OPEN INSIDE WEB3 WALLET
+============================== -->
+
+<div id="browserBox"
+style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.85);
+justify-content:center;
+align-items:center;
+z-index:999999;
+">
+
+<div style="
+width:90%;
+max-width:350px;
+background:#111827;
+padding:25px;
+border-radius:20px;
+border:1px solid gold;
+text-align:center;
+color:white;
+">
+
+<h3 style="color:gold;">
+🔗 Open Inside Web3 Wallet Browser
+</h3>
+
+<p style="
+font-size:13px;
+line-height:1.8;
+color:#ccc;
+">
+
+Open this referral link inside your preferred Web3 Wallet Browser.
+
+<br><br>
+
+If direct opening does not work, copy the referral link and paste it inside your wallet browser.
+
+</p>
+
+<button onclick="copyCurrentLink()"
+style="
+background:gold;
+color:black;
+border:none;
+padding:12px 20px;
+border-radius:12px;
+font-weight:bold;
+">
+
+📋 Copy Current Link
+
+</button>
+
+<br><br>
+
+<button onclick="
+document.getElementById('browserBox').style.display='none'
+"
+style="
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:12px;
+">
+
+OK
+
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+// ==============================
+// 🔗 COPY CURRENT LINK
+// ==============================
+function copyCurrentLink(){
+
+navigator.clipboard.writeText(window.location.href);
+
+alert(
+"Referral link copied.\n\n" +
+"Open your Wallet DApp Browser and paste the link."
+);
+
+}
+
+// ==============================
+// 🔥 SHOW ONLY FOR REFERRAL LINK
+// ==============================
+window.addEventListener("load",()=>{
+
+const urlParams = new URLSearchParams(window.location.search);
+
+if(urlParams.get("ref")){
+
+setTimeout(()=>{
+
+document.getElementById("browserBox").style.display="flex";
+
+},1000);
+
+}
+
+});
+
+</script>
+
 <!-- 🔥 FIREWORKS CANVAS (FINAL POSITION) -->
 <canvas id="fireworksCanvas"
-style="position:fixed;
+style="
+position:fixed;
 top:0;
 left:0;
 width:100%;
