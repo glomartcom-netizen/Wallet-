@@ -4010,7 +4010,7 @@ function hideWalletPanel(){
 </script>
 
 <!-- ==============================
-🔗 OPEN INSIDE WEB3 WALLET
+🔗 OPEN INSIDE WALLET BROWSER
 ============================== -->
 
 <div id="browserBox"
@@ -4048,27 +4048,83 @@ line-height:1.8;
 color:#ccc;
 ">
 
-Examples:
-
-🟡 Trust Wallet
-
-🦊 MetaMask
-
-🟢 SafePal
-
-🟠 TokenPocket
+Tap any wallet below to open directly.
 
 <br><br>
 
-If direct opening does not work, tap "Copy Current Link" and paste it inside your wallet browser.
+🌐 Other Wallet Users
+
+<br>
+
+Open your wallet browser manually and paste the copied link.
 
 <br><br>
 
 ✅ Already inside your wallet browser?
 
+<br>
+
 Tap OK and connect your wallet.
 
 </p>
+
+<div style="
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+margin-bottom:18px;
+">
+
+<button onclick="openTrust()"
+style="
+background:#1e293b;
+color:white;
+border:none;
+padding:10px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;">
+🟡 Trust Wallet
+</button>
+
+<button onclick="openMetaMask()"
+style="
+background:#1e293b;
+color:white;
+border:none;
+padding:10px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;">
+🦊 MetaMask
+</button>
+
+<button onclick="openSafePal()"
+style="
+background:#1e293b;
+color:white;
+border:none;
+padding:10px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;">
+🟢 SafePal
+</button>
+
+<button onclick="openTokenPocket()"
+style="
+background:#1e293b;
+color:white;
+border:none;
+padding:10px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;">
+🟠 TokenPocket
+</button>
+
+</div>
 
 <button onclick="copyCurrentLink()"
 style="
@@ -4106,6 +4162,60 @@ OK
 </div>
 
 <script>
+
+// ==============================
+// 🔗 COPY CURRENT LINK
+// ==============================
+function copyCurrentLink(){
+
+navigator.clipboard.writeText(window.location.href);
+
+alert(
+"Referral link copied.\n\n" +
+"Open your Wallet Browser and paste the link."
+);
+
+}
+
+// ==============================
+// 🔗 DIRECT WALLET OPEN
+// ==============================
+function openTrust(){
+
+window.location.href =
+"https://link.trustwallet.com/open_url?coin_id=20000714&url=" +
+encodeURIComponent(window.location.href);
+
+}
+
+function openMetaMask(){
+
+window.location.href =
+"https://metamask.app.link/dapp/" +
+window.location.host +
+window.location.pathname +
+window.location.search;
+
+}
+
+function openSafePal(){
+
+window.location.href =
+"https://link.safepal.io/open?url=" +
+encodeURIComponent(window.location.href);
+
+}
+
+function openTokenPocket(){
+
+window.location.href =
+"tpdapp://open?params=%7B%22url%22%3A%22" +
+encodeURIComponent(window.location.href) +
+"%22%7D";
+
+}
+
+</script>
 
 // ==============================
 // 🔗 COPY CURRENT LINK
