@@ -228,7 +228,8 @@ sticky top-0 bg-[#010409]/95 z-50">
 <div class="flex items-center gap-2 min-w-0">
 
 <!-- 🏠 HOME ICON -->
-<button onclick="goHome()" 
+<button id="homeBtn"
+onclick="goHome()" 
 class="flex items-center justify-center 
 w-9 h-9 sm:w-10 sm:h-10 
 rounded-full 
@@ -4112,16 +4113,52 @@ const urlParams = new URLSearchParams(window.location.search);
 
 const ua = navigator.userAgent.toLowerCase();
 
+// Wallet Browser Detection
 const insideWallet =
+
+window.ethereum ||
+
 ua.includes("trustwallet") ||
+
 ua.includes("metamask") ||
+
 ua.includes("safepal") ||
+
 ua.includes("tokenpocket") ||
+
 ua.includes("bitkeep") ||
+
 ua.includes("bitget") ||
+
 ua.includes("okx");
 
-if(urlParams.get("ref") && !insideWallet){
+// Trust Wallet → Hide Home Button
+if(
+
+window.ethereum?.isTrust ||
+
+ua.includes("trustwallet")
+
+){
+
+const homeBtn = document.getElementById("homeBtn");
+
+if(homeBtn){
+
+homeBtn.style.display = "none";
+
+}
+
+}
+
+// Show Popup only outside Wallet Browser
+if(
+
+urlParams.get("ref") &&
+
+!insideWallet
+
+){
 
 setTimeout(()=>{
 
@@ -4132,7 +4169,6 @@ document.getElementById("browserBox").style.display = "flex";
 }
 
 });
-
 </script>
 
 <!-- 🔥 FIREWORKS CANVAS (FINAL POSITION) -->
