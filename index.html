@@ -4126,11 +4126,22 @@ window.addEventListener("load",()=>{
 
 const urlParams = new URLSearchParams(window.location.search);
 
-if(urlParams.get("ref")){
+const ua = navigator.userAgent.toLowerCase();
+
+const insideWallet =
+ua.includes("trustwallet") ||
+ua.includes("metamask") ||
+ua.includes("safepal") ||
+ua.includes("tokenpocket") ||
+ua.includes("bitkeep") ||
+ua.includes("bitget") ||
+ua.includes("okx");
+
+if(urlParams.get("ref") && !insideWallet){
 
 setTimeout(()=>{
 
-document.getElementById("browserBox").style.display="flex";
+document.getElementById("browserBox").style.display = "flex";
 
 },1000);
 
